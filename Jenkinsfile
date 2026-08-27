@@ -1,26 +1,32 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage('Build'){
-            steps{
+
+    stages {
+        stage('Build') {
+            steps {
                 echo "Build Docker image"
-                bat"docker builder -t mypythonflaskapp ."
+                bat "docker build -t mypythonflaskapp ."
             }
         }
-        stage('Run'){
-            steps{
+
+        stage('Run') {
+            steps {
                 echo "Run application in Docker Container"
+
                 bat "docker rm -f mycontainer || exit 0"
-                bat "docker run -d -p 5000:5000 --name myconatiner mypythonflaskapp"
+
+                bat "docker run -d -p 5000:5000 --name mycontainer mypythonflaskapp"
             }
         }
     }
-    post{
-        success{
+
+    post {
+        success {
             echo 'Pipeline completed successfully!'
         }
-        failure{
-            echo 'Pipeline failer. Please check the logs.'
+
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
         }
     }
 }
